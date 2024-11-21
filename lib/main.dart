@@ -1,6 +1,7 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:ksrtcegapp/screens/dashboard_screen.dart';
+import 'package:ksrtcegapp/screens/login_screen.dart';
 import 'package:ksrtcegapp/services/mongo_db_service.dart';
 
 void main() async {
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DashboardScreen(),
+      //home: DashboardScreen(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false, // Disable debug banner
     );
   }

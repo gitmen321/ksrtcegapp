@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       // backgroundColor: Colors.yellow[100],
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(18.0),
         child: SingleChildScrollView(
           child: Column(
            // mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 15,
+                height: 20,
               ),
               // Text("Password"),
               TextField(

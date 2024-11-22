@@ -8,14 +8,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is properly initialized
 
   // Initialize the database connection
-  DatabaseService dbService = DatabaseService();
-  await dbService.connect(); // Connect to MongoDB
-
-  if (dbService.isConnected()) {
-    print("The app successfully connected to MongoDB!");
-  } else {
-    print("The app failed to connect to MongoDB.");
-  }
+  // DatabaseService dbService = DatabaseService();
+  // await dbService.connect(); // Connect to MongoDB
+  //
+  // if (dbService.isConnected()) {
+  //   print("The app successfully connected to MongoDB!");
+  // } else {
+  //   print("The app failed to connect to MongoDB.");
+  // }
 
   runApp(MyApp());
 }

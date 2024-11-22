@@ -6,6 +6,11 @@ import 'package:ksrtcegapp/screens/attendance_screen.dart';
 import 'package:ksrtcegapp/screens/profile_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
+
+  final String pen;
+
+  const DashboardScreen({super.key, required this.pen});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +48,7 @@ class DashboardScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => TripDetailsScreen()),
+                        builder: (context) => TripDetailsScreen(tripId: '#38280752')),
                   );
                 },
               ),
@@ -77,7 +82,7 @@ class DashboardScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    MaterialPageRoute(builder: (context) => ProfileScreen(pen: pen)),
                   );
                 },
               ),

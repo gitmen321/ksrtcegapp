@@ -114,6 +114,7 @@ class DatabaseService {
       print('Error fetching driver details: $e');
       return null;
     }
+    return null;
   }
 
 

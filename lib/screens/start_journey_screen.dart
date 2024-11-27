@@ -91,16 +91,21 @@ class _StartJourneyScreenState extends State<StartJourneyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Start Your Journey',
-          style: GoogleFonts.sahitya(
-            color: Colors.white,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(65),
+        child: AppBar(
+          title: Row(
+            children: [
+              const CircleAvatar(
+                  radius: 19,
+                  backgroundImage: AssetImage('assets/logo/ktracimage.png')
+                ),
+                const SizedBox(width: 10),
+              Text('Start Journey',
+                  style: Theme.of(context).primaryTextTheme.titleMedium),
+            ],
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 5, 95, 151),
       ),
       body: Center(
         child: Column(
@@ -108,7 +113,8 @@ class _StartJourneyScreenState extends State<StartJourneyScreen> {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                 backgroundColor: const Color.fromARGB(255, 52, 105, 2),
               ),
               onPressed: _handleStartTrip,
@@ -124,7 +130,8 @@ class _StartJourneyScreenState extends State<StartJourneyScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                 backgroundColor: const Color.fromARGB(255, 207, 14, 14),
               ),
               onPressed: _handleStopTrip,

@@ -1,37 +1,26 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ksrtcegapp/screens/dashboard_screen.dart';
 import 'package:ksrtcegapp/screens/login_screen.dart';
-import 'package:ksrtcegapp/services/mongo_db_service.dart';
+import 'package:ksrtcegapp/theme/pallet.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is properly initialized
-
-  // Initialize the database connection
-  // DatabaseService dbService = DatabaseService();
-  // await dbService.connect(); // Connect to MongoDB
-  //
-  // if (dbService.isConnected()) {
-  //   print("The app successfully connected to MongoDB!");
-  // } else {
-  //   print("The app failed to connect to MongoDB.");
-  // }
-
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized(); 
+  runApp( const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeNotifierProvider);
     return MaterialApp(
       title: 'Ksrtc App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      //home: DashboardScreen(),
-      home: LoginPage(),
+      theme: theme,
+      home: const LoginPage(),
+      // home: DashboardScreen(pen: 'pen'),
       debugShowCheckedModeBanner: false, // Disable debug banner
     );
   }

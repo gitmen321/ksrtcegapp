@@ -91,10 +91,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ksrtcegapp/screens/dashboard_screen.dart';
-import 'package:ksrtcegapp/constants/mongo_constants.dart';
 import 'package:ksrtcegapp/services/mongo_db_service.dart';
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
-//import 'package:ksrtcegapp/utils/mongo_utils.dart'; // Import the file containing the standalone function
+import 'package:ksrtcegapp/theme/pallet.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -118,12 +116,12 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               const SizedBox(height: 150),
-              Text(
+               Text(
                 "Login",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 35,
-                  color: const Color.fromARGB(255, 5, 95, 151),
+                  color: Pallet.redColor
                 ),
               ),
               const SizedBox(height: 45),
@@ -171,6 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   if (pen != null) {
                     // If login is successful, navigate to the dashboard
                     Navigator.push(
+                      // ignore: use_build_context_synchronously
                       context,
                       MaterialPageRoute(
                         builder: (context) => DashboardScreen(pen: pen),
@@ -178,12 +177,13 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   } else {
                     // Show an error message if login fails
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Invalid username or password")),
                     );
                   }
                 },
-                color: const Color.fromARGB(255, 5, 95, 151),
+                color: Pallet.redColor,
                 minWidth: 300,
                 shape: const StadiumBorder(),
                 child: Text(
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 25),
               const Image(
-                image: AssetImage("assets/images/ksrtcblue.png"),
+                image: AssetImage("assets/images/ksrtcimage.jpg"),
               ),
             ],
           ),
@@ -206,11 +206,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-//
-//
-
 
 
 

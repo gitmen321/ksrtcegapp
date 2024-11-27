@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ksrtcegapp/constants/mongo_constants.dart';
+import 'package:ksrtcegapp/services/mongo_db_service.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 // MongoDB constants
 const String mongoUri = MongoConstants.mongoUrl; // Replace with your URI
 const String driversCollectionName = "drivers";
-
+const String conductorsCollectionName = "conductors";
 
 
 // ProfileScreen widget
@@ -20,8 +21,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
   Map<String, dynamic>? driverDetails;
   bool isLoading = true;
+  DatabaseService databaseService = DatabaseService();
 
   @override
   void initState() {
@@ -30,7 +33,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadDriverDetails() async {
-    final details = await fetchDriverDetails(widget.pen);
+    final details = await databaseService.fetchDriverDetails(widget.pen);
+    //databaseService.fetchDriverDetails(widget.pen);
     setState(() {
       driverDetails = details;
       //print(driverDetails);
@@ -171,22 +175,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
 // Function to fetch driver details from MongoDB
-Future<Map<String, dynamic>?> fetchDriverDetails(String pen) async {
-  try {
-    final db = await mongo.Db.create(mongoUri);
-    await db.open();
-
-    final collection = db.collection(driversCollectionName);
-    final driver = await collection.findOne(mongo.where.eq('PEN', pen));
-    //print(driver);
-    if (driver != null) {
-      driver['_id'] = driver['_id'].toHexString(); // Convert ObjectId to String if needed
-    }
-
-    await db.close();
-    return driver;
-  } catch (e) {
-    print('Error fetching driver details: $e');
-    return null;
-  }
-}

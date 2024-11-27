@@ -48,7 +48,7 @@ class DashboardScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => TripDetailsScreen(tripId: '#38280752')),
+                        builder: (context) => TripDetailsScreen(  pen: pen,)), // tripId: '#38280752'
                   );
                 },
               ),

@@ -3,24 +3,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ksrtcegapp/constants/mongo_constants.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
-
+import '../services/mongo_db_service.dart';
 
 // TripDetailsScreen class
 class TripDetailsScreen extends StatefulWidget {
+  final String pen;
 
- // final Map<String, dynamic> tripDetails;
-  final String tripId;
 
-  const TripDetailsScreen({super.key, required this.tripId});
+  const TripDetailsScreen({super.key, required this.pen});
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
-  Map<String, dynamic>? tripDetails;
-  bool isLoading = true;
 
+  List<Map<String, dynamic>>? trips;
+  bool isLoading = true;
+  DatabaseService databaseService = DatabaseService();
 
   @override
   void initState() {
@@ -29,9 +29,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   }
 
   Future<void> _loadTripDetails() async {
-    final details = await fetchTripDetails(widget.tripId);
+    final details = await databaseService.fetchTripDetailsByPEN(widget.pen);
     setState(() {
-      tripDetails = details;
+      trips = details;
+      print(trips);
       isLoading = false;
     });
   }
@@ -43,7 +44,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         title: Text(
           'Trip Details',
           style: GoogleFonts.sahitya(
-              color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: const Color.fromARGB(255, 5, 95, 151),
       ),
@@ -60,196 +64,140 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         ),
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : tripDetails == null
+            : trips == null || trips!.isEmpty
             ? const Center(
           child: Text(
-            'Failed to load trip details',
+            'No trips found for this PEN',
             style: TextStyle(color: Colors.red, fontSize: 16),
           ),
         )
-            : Padding(
-          padding: const EdgeInsets.all(22.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Bus Number:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 95, 151),
-                ),
+            : ListView.builder(
+          padding: const EdgeInsets.all(12.0),
+          itemCount: trips!.length,
+          itemBuilder: (context, index) {
+            final trip = trips![index];
+            return Card(
+              elevation: 5,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(height: 5),
-              Text(
-                tripDetails?['bus_number'] ?? 'N/A',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Trip Route:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 95, 151),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '${tripDetails?['departure_location']?['name'] ?? 'N/A'} to ${tripDetails?['arrival_location']?['name'] ?? 'N/A'}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Start Time:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 95, 151),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                tripDetails?['start_time'] ?? 'N/A',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'End Time:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 95, 151),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                tripDetails?['end_time'] ?? 'N/A',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Trip Type:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 95, 151),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                tripDetails?['trip_type'] ?? 'N/A',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Date:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 95, 151),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                tripDetails?['start_date']?.toString().split('T')[0] ??
-                    'N/A',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 80),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                    const Color.fromARGB(255, 5, 95, 151),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 20.0),
-                    child: Text(
-                      'Back to Dashboard',
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${index+1}'),
+                    const Text(
+                      'Bus Number:',
                       style: TextStyle(
-                          fontSize: 16, color: Colors.white),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 95, 151),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 5),
+                    Text(
+                      trip['bus_number'] ?? 'N/A',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Trip Route:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 95, 151),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      '${trip['departure_location']['depo']?? 'N/A'} to ${trip['arrival_location']['depo'] ?? 'N/A'}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Start Time:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 95, 151),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      trip['start_time'] ?? 'N/A',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'End Time:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 95, 151),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      trip['end_time'] ?? 'N/A',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Trip Type:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 95, 151),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      trip['trip_type'] ?? 'N/A',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Date:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 95, 151),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      trip['start_date']?.toString().split('T')[0] ?? 'N/A',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            );
+          },
+
         ),
       ),
     );
   }
 }
 
-
-// Function to fetch trip details from MongoDB
-Future<Map<String, dynamic>?> fetchTripDetails(String tripId) async {
-  String mongoUri = MongoConstants.mongoUrl;
-  //  'mongodb+srv://<username>:<password>@ksrtc.obehd.mongodb.net/KSRTC';
-  const String tripsCollectionName = 'trips';
-  const String vehiclesCollectionName = 'vehicles';
-
-  try {
-    // Connect to the database
-    final db = await mongo.Db.create(mongoUri);
-    await db.open();
-
-    // Access the trips collection
-    final collection = db.collection(tripsCollectionName);
-
-    // Fetch a single trip document using the trip ID
-    final trip = await collection.findOne(mongo.where.eq('trip_id', tripId));
-
-    // Convert ObjectId to String if necessary
-    if (trip != null) {
-      // Convert ObjectId to String
-      trip['_id'] = trip['_id'].toHexString();
-      trip['vehicle_id'] = trip['vehicle_id']?.toHexString();
-      trip['driver_id'] = trip['driver_id']?.toHexString();
-      trip['conductor_id'] = trip['conductor_id']?.toHexString();
-
-      // Fetch bus number from vehicles collection
-      if (trip['vehicle_id'] != null) {
-        final vehiclesCollection = db.collection(vehiclesCollectionName);
-        final vehicle = await vehiclesCollection
-            .findOne(mongo.where.eq('_id', mongo.ObjectId.parse(trip['vehicle_id'])));
-
-        // Add the bus number to the trip details
-        trip['bus_number'] = vehicle?['BUSNO'] ?? 'N/A';
-        //print(trip['bus_number']);
-      }
-    }
-
-
-    await db.close();
-    return trip;
-  } catch (e) {
-    print('Error fetching trip details: $e');
-    return null;
-  }
-}
